@@ -1,21 +1,23 @@
-# Use an official Node.js runtime as a parent image (LTS Alpine is small and secure)
-FROM node:18-alpine
+# Use an official Node.js runtime (Alpine for small size)
+FROM node:22-alpine3.19
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to leverage Docker cache
-COPY package*.json ./
+# Copy only the package files first for better caching
+COPY package.json ./
 
-# Install application dependencies
-RUN pnpm install
+# Install dependencies
+RUN npm install
 
-# Copy the rest of the application source code
+# Copy the rest of the app source code
 COPY . .
 
-# App's port (assuming 5000, change if different)
+# Expose the app port (change if needed)
 EXPOSE 5000
 
-# The command to run your app using nodemon for development
-# This uses the "dev" script from your package.json
-CMD [ "pnpm", "dev" ]
+# Set environment to development (optional)
+ENV NODE_ENV=production
+
+# Start the app using pnpm (e.g., with nodemon)
+CMD ["npm", "run", "dev"]
