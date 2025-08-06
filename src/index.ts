@@ -36,7 +36,11 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+app.get('/', (_req, res) => {
+  res.redirect('/api-docs');
+});
+
+app.use(['/api-docs'], swaggerUi.serve, swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'NASA Data Explorer API Documentation',
