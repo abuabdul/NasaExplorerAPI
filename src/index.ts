@@ -6,7 +6,7 @@
  */
 
 import 'dotenv/config';
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -17,7 +17,7 @@ import { HealthResponse } from './types/api.types';
 import { HTTP_STATUS } from './utils/constants';
 import { specs } from './utils/swagger';
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(helmet());
@@ -27,7 +27,7 @@ app.use(
     origin:
       process.env.NODE_ENV === 'production'
         ? ['https://your-frontend-domain.com']
-        : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+        : ['http://localhost:3000'],
     credentials: true,
   })
 );
