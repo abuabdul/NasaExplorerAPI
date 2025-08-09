@@ -16,18 +16,40 @@ import { errorHandler, notFoundHandler } from './middlewares/errorMiddleware';
 import { HealthResponse } from './types/api.types';
 import { HTTP_STATUS } from './utils/constants';
 import { specs } from './utils/swagger';
+import rateLimit from 'express-rate-limit';
+import logger from './utils/logger';
 
 const app: Express = express();
 const PORT = process.env.PORT || 8000;
+const IS_PROD = (process.env.NODE_ENV || '').toLowerCase() === 'production';
+
+// Global process-level error handlers to prevent server crashes
+process.on('unhandledRejection', (reason: unknown) => {
+  logger.error({ reason }, 'Unhandled Promise Rejection');
+});
+
+process.on('uncaughtException', (error: Error) => {
+  logger.error({ err: error }, 'Uncaught Exception');
+});
 
 app.use(helmet());
 
+// Derive allowed CORS origins
+const DEV_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+];
+
+const PROD_ORIGINS = (process.env.DOMAINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? process.env.DOMAINS?.split(',') || []
-        : ['http://localhost:3000'],
+    origin: IS_PROD ? (PROD_ORIGINS.length > 0 ? PROD_ORIGINS : false) : DEV_ORIGINS,
     credentials: true,
   })
 );
@@ -36,11 +58,16 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (_req, res) => {
-  res.redirect('/api-docs');
+// Basic rate limiting to protect upstream and our API
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
 });
+app.use('/api', limiter);
 
-app.use(['/api-docs'], swaggerUi.serve, swaggerUi.setup(specs, {
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
   explorer: true,
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'NASA Data Explorer API Documentation',
@@ -64,10 +91,12 @@ app.use('/api', nasaRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`NASA Data Explorer API running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`API Documentation available at http://localhost:${PORT}/api-docs`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    logger.info({ port: PORT }, `NASA Data Explorer API running on port ${PORT}`);
+    logger.info({ env: process.env.NODE_ENV || 'development' }, 'Environment');
+    logger.info(`API Documentation available at http://localhost:${PORT}/api-docs`);
+  });
+}
 
 export default app;

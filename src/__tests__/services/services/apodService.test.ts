@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { APIError } from '../../middlewares/errorMiddleware';
+// TODO: Update the import path if necessary to the correct location of errorMiddleware
+import { APIError } from '../../../middlewares/errorMiddleware';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -7,15 +8,15 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 const mockAxiosInstance = {
   get: jest.fn(),
   interceptors: {
-    response: {
-      use: jest.fn(),
-    },
+    request: { use: jest.fn() },
+    response: { use: jest.fn() },
   },
+  defaults: { params: {} },
 };
 
 mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
 
-import apodService from '../../services/apodService';
+import apodService from '../../../services/apodService';
 
 describe('APODService', () => {
   beforeEach(() => {

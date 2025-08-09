@@ -1,21 +1,22 @@
 import axios from 'axios';
-import { APIError } from '../../middlewares/errorMiddleware';
 
 jest.mock('axios');
+
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 const mockAxiosInstance = {
   get: jest.fn(),
   interceptors: {
-    response: {
-      use: jest.fn(),
-    },
+    request: { use: jest.fn() },
+    response: { use: jest.fn() },
   },
+  defaults: { params: {} },
 };
 
 mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
 
-import neoService from '../../services/neoService';
+import { APIError } from "../../../middlewares/errorMiddleware";
+import neoService from "../../../services/neoService";
 
 describe('NEOService', () => {
   beforeEach(() => {
@@ -49,7 +50,7 @@ describe('NEOService', () => {
 
       expect(result.success).toBe(true);
       expect(result.data?.element_count).toBe(2);
-      expect(result.data?.near_earth_objects).toHaveLength(1);
+      expect(Object.keys(result.data?.near_earth_objects || {})).toHaveLength(1);
     });
 
     it('should throw APIError for invalid date format', async () => {
