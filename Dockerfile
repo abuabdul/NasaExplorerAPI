@@ -6,7 +6,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install OS deps required for builds (optional, keep minimal)
-RUN apk add --no-cache libc6-compat
+RUN apk update && apk upgrade && apk add --no-cache libc6-compat
 
 # Copy lockfiles/package and tsconfig first to leverage layer caching
 COPY package*.json tsconfig.json ./

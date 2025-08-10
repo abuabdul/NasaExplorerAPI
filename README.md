@@ -7,8 +7,8 @@ A comprehensive RESTful API for exploring NASA's open data, including Astronomy 
 ```bash
 git clone https://github.com/yourusername/nasa-data-explorer-backend-api.git
 cd nasa-data-explorer-backend-api
-cp .env.example .env && npm install
-npm run dev
+cp .env.example .env && pnpm install
+pnpm dev
 ```
 
 API: http://localhost:8000  |  Docs: http://localhost:8000/api-docs
@@ -40,7 +40,7 @@ API documentation is available at `/api-docs` when the server is running. The do
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm
+- pnpm
 - Docker (optional, for running via containers)
 - NASA API Key (optional, the app falls back to DEMO_KEY for non-critical usage)
 
@@ -54,7 +54,7 @@ API documentation is available at `/api-docs` when the server is running. The do
 
 2. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. Create a `.env` file in the root directory with the following variables:
@@ -67,7 +67,7 @@ API documentation is available at `/api-docs` when the server is running. The do
 
 4. Start the development server:
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 The server will start at `http://localhost:8000` with API documentation at `http://localhost:8000/api-docs`.
@@ -157,7 +157,7 @@ When prompted:
 - Organization/Region: choose your preference
 - Internal port: 8000
 - Create a Postgres DB: No
-- Deploy now: No (we’ll set secrets first)
+- Deploy now: No (we'll set secrets first)
 
 This generates a `fly.toml`. Confirm it includes:
 - `internal_port = 8000`
@@ -171,13 +171,13 @@ flyctl secrets set \
 ```
 Notes:
 - `FRONTEND_ORIGIN` can be a comma-separated list for multiple origins.
-- `NODE_ENV` defaults to production in container; you don’t need to set it.
+- `NODE_ENV` defaults to production in container; you don't need to set it.
 
 ### 3) Deploy
 ```bash
 flyctl deploy
 ```
-Fly will build using the Dockerfile’s production stage and release the app.
+Fly will build using the Dockerfile's production stage and release the app.
 
 ### 4) Verify
 ```bash
@@ -219,16 +219,20 @@ Troubleshooting
 - CORS blocked: set FRONTEND_ORIGIN to your exact frontend origin(s) (scheme + host + optional port).
 - NASA rate limits: use your own key (avoid DEMO_KEY in production).
 
+> **Note:** Although this project includes a Fly.io deployment workflow, it is currently deployed on [Render](https://render.com/) for ease and quick testing.  
+> **Live API:** [https://nasaexplorerapi.onrender.com/](https://nasaexplorerapi.onrender.com/)  
+> You can still use the provided Fly.io scripts for your own deployments.
+
 ## Available Scripts
 
-- `npm start`: Start the production server
-- `npm run dev`: Start the development server with hot-reloading
-- `npm run build`: Build the TypeScript project
-- `npm test`: Run tests
-- `npm run lint`: Run ESLint
-- `npm run lint:fix`: Fix ESLint issues
-- `npm run format`: Format code with Prettier
-- `npm run format:check`: Check code formatting
+- `pnpm start`: Start the production server
+- `pnpm dev`: Start the development server with hot-reloading
+- `pnpm build`: Build the TypeScript project
+- `pnpm test`: Run tests
+- `pnpm lint`: Run ESLint
+- `pnpm lint:fix`: Fix ESLint issues
+- `pnpm format`: Format code with Prettier
+- `pnpm format:check`: Check code formatting
 
 ## API Endpoints
 
@@ -277,7 +281,7 @@ The project uses Jest. Tests live in `src/__tests__`.
 
 - Local:
   ```bash
-  npm test
+  pnpm test
   ```
 
 - With Docker (using the dev image which includes dev dependencies):

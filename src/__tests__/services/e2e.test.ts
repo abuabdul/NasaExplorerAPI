@@ -4,20 +4,17 @@
  * - Mocks axios at the module level to avoid real HTTP calls to NASA
  */
 
-// Ensure test env before importing the app
 process.env.NODE_ENV = 'test';
 
 import request from 'supertest';
 import type { AxiosInstance } from 'axios';
 
-// Create a controllable mock axios client
 type MockAxios = {
   get: jest.Mock;
   interceptors: {
     request: { use: jest.Mock };
     response: { use: jest.Mock };
   };
-  // Keep it loose to avoid Axios v1 headers typing requirements
   defaults: any;
 };
 
@@ -28,7 +25,6 @@ const makeMockClient = (): MockAxios => {
       request: { use: jest.fn() },
       response: { use: jest.fn() },
     },
-    // Only the params shape is needed by our code; type as any to satisfy TS
     defaults: { params: {} } as any,
   };
   return client;
@@ -53,7 +49,6 @@ const setAxiosGetHandler = (handler: (url: string, config?: any) => Promise<any>
   mockClient.get.mockImplementation((url: string, config?: any) => handler(url, config));
 };
 
-// Default catch-all success for endpoints we don't explicitly test data shape for
 const defaultAxiosHandler = async (url: string) => {
   if (typeof url !== 'string') return { data: {} };
   if (url.includes('/planetary/apod')) {

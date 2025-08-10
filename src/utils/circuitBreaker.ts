@@ -19,7 +19,7 @@ export default class CircuitBreaker {
   constructor(opts?: CircuitBreakerOptions) {
     this.failureThreshold = opts?.failureThreshold ?? 5;
     this.successThreshold = opts?.successThreshold ?? 2;
-    this.cooldownPeriodMs = opts?.cooldownPeriodMs ?? 30_000;
+    this.cooldownPeriodMs = opts?.cooldownPeriodMs ?? 15_000;
   }
 
   public allowRequest(): boolean {

@@ -6,7 +6,7 @@ import neoController from '../controllers/neoController';
 import imageLibraryController from '../controllers/imageLibraryController';
 import infoController from '../controllers/infoController';
 
-const router = Router();
+const router: Router = Router();
 
 /**
  * @swagger

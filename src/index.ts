@@ -42,7 +42,7 @@ const DEV_ORIGINS = [
   'http://localhost:5175',
 ];
 
-const PROD_ORIGINS = (process.env.DOMAINS || '')
+const PROD_ORIGINS = (process.env.FRONTEND_ORIGIN || '')
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
@@ -57,6 +57,10 @@ app.use(
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (_req, res) => {
+  res.redirect('/api-docs');
+});
 
 // Basic rate limiting to protect upstream and our API
 const limiter = rateLimit({

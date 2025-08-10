@@ -1,5 +1,4 @@
 import axios from 'axios';
-// TODO: Update the import path if necessary to the correct location of errorMiddleware
 import { APIError } from '../../../middlewares/errorMiddleware';
 
 jest.mock('axios');
