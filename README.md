@@ -5,7 +5,7 @@ A comprehensive RESTful API for exploring NASA's open data, including Astronomy 
 ## Quick start
 
 ```bash
-git clone https://github.com/yourusername/nasa-data-explorer-backend-api.git
+git clone https://github.com/abuabdul/nasa-data-explorer-backend-api.git
 cd nasa-data-explorer-backend-api
 cp .env.example .env && pnpm install
 pnpm dev
@@ -48,7 +48,7 @@ API documentation is available at `/api-docs` when the server is running. The do
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/nasa-data-explorer-backend-api.git
+   git clone https://github.com/abuabdul/nasa-data-explorer-backend-api.git
    cd nasa-data-explorer-backend-api
    ```
 
@@ -62,6 +62,7 @@ API documentation is available at `/api-docs` when the server is running. The do
    PORT=8000
    NODE_ENV=development
    NASA_API_KEY=your_nasa_api_key
+   FRONTEND_ORIGIN=http://localhost:3000
    ```
    Note: You can obtain a NASA API key from [https://api.nasa.gov](https://api.nasa.gov)
 
